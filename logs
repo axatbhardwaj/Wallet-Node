@@ -1,0 +1,4 @@
+{
+  contracts: { 'Greeter.sol': { Greeter: [Object] } },
+  sources: { 'Greeter.sol': { id: 0 } }
+}
