@@ -3,18 +3,16 @@ const solc = require('solc');
 const fs = require('fs');
 //const walletGen = require(walletGen.js)
 require("dotenv").config({ path: ".env" });
-(async () => {
-
-
+(async (contractName,pathToContract) => {
   const provider = new ethers.providers.JsonRpcProvider(process.env.POLYGON_TESTNET_RPC_URL);
-  var contractSupply = fs.readFileSync('contracts/Greeter.sol');
+  var contractSupply = fs.readFileSync(pathToContract);
   contractSupply = contractSupply.toString();
   //console.log(contractSupply.toString());
 
   const input = {
     language: 'Solidity',
     sources: {
-      'Greeter.sol': { content: contractSupply },
+      'contract': { content: contractSupply },
     },
     settings: {
       //version :"0.8.0",
@@ -29,14 +27,14 @@ require("dotenv").config({ path: ".env" });
   // var Artifacts = 
   
   var metadata = JSON.parse(solc.compile(JSON.stringify(input)))
-  var bytecode = metadata.contracts['Greeter.sol']['Greeter'].evm.bytecode.object;
-  //console.log(bytecode);
+  var bytecode = metadata.contracts['contract'][contractName].evm.bytecode.object;
+  console.log(bytecode);
 
-  const abi = metadata.contracts['Greeter.sol'].Greeter.abi;
+  const abi = metadata.contracts['contract'][contractName].abi;
        /* 2. Extract Abi And Bytecode From Contract */
       //  const abi = contract.abi
 
-  //console.log(abi);
+  console.log(abi);
   //  const walletGen = ethers.Wallet.createRandom()
   
   // Use your wallet's private key to deploy the contract
@@ -53,8 +51,8 @@ require("dotenv").config({ path: ".env" });
   console.log(options);
 
   //Deploy the contract
-  `const factory = new ethers.ContractFactory(abi,bytecode,wallet)
+  const factory = new ethers.ContractFactory(abi,bytecode,wallet)
   const contract = await factory.deploy("hi")
   await contract.deployed()
-  console.log(`Deployment successful! Contract Address: ${contract.address}`)`
-})()
+  console.log(`Deployment successful! Contract Address: ${contract.address}`)
+})("Greeter","/home/axat/per/wallet/Wallet-Node/contracts/Greeter.sol")
