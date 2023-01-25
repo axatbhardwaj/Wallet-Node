@@ -3,7 +3,7 @@ const solc = require('solc');
 const fs = require('fs');
 //const walletGen = require(walletGen.js)
 require("dotenv").config({ path: ".env" });
-(async (contractName,pathToContract) => {
+(async (contractName,pathToContract,argsArray) => {
   const provider = new ethers.providers.JsonRpcProvider(process.env.POLYGON_TESTNET_RPC_URL);
   var contractSupply = fs.readFileSync(pathToContract);
   contractSupply = contractSupply.toString();
@@ -51,8 +51,13 @@ require("dotenv").config({ path: ".env" });
   console.log(options);
 
   //Deploy the contract
-  const factory = new ethers.ContractFactory(abi,bytecode,wallet)
-  const contract = await factory.deploy("hi")
-  await contract.deployed()
-  console.log(`Deployment successful! Contract Address: ${contract.address}`)
-})("Greeter","/home/axat/per/wallet/Wallet-Node/contracts/Greeter.sol")
+  const factory = new ethers.ContractFactory(abi, bytecode, wallet)
+  if (Array.isArray(argsArray) && argsArray.length > 0)
+  {   
+    //console.log(...argsArray);
+    const contract = await factory.deploy(...argsArray);
+    await contract.deployed();
+    console.log(`Deployment successful! Contract Address: ${contract.address}`);
+}
+  
+})("Greeter","/home/axat/per/wallet/Wallet-Node/contracts/Greeter.sol",["hi"])
