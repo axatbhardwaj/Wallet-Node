@@ -9,3 +9,14 @@ const wallet = ethers.Wallet.createRandom()
     };
 }
 createWallet();
+
+
+/*
+from mnemonic 
+
+const ethers = require('ethers');
+let mnemonic = "YOUR MNEMONIC";
+let mnemonicWallet = ethers.Wallet.fromMnemonic(mnemonic);
+console.log(mnemonicWallet.privateKey)
+
+*/
